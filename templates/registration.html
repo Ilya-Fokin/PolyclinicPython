@@ -14,17 +14,20 @@
     </header>
 
     <div class="content_zone">
-        <form class="login_registration_form">
+        <form class="login_registration_form" method="post" action="http://127.0.0.1:5000/registration">
             <div class="header_form">Registration</div>
             <input class="input_form" type="text" name="login" placeholder="Login">
             <input class="input_form" type="password" name="password" placeholder="Password">
             <input class="input_form" type="text" name="full_name" placeholder="Full name">
             <input class="input_form" type="text" name="experience" placeholder="Experience, years">
-            <select class="input_form">
-                <option>Specialization</option>
+            <select class="input_form" name="specialization">
+                <option>Not Selected</option>
                 <option>Specialization</option>
             </select>
             <button class="enter_button">Enter</button>
+            {% if message %}
+                <div class="message">{{ message }}</div>
+            {% endif %}
         </form>
     </div>
 
