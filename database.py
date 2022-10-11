@@ -113,3 +113,44 @@ def createUser(login, password, role):
             pass
     else:
         return "Login is exist"
+
+
+def getRoleUser(user_id):
+    cursor = get_cursor()
+    res = cursor.execute(f"""select role from role join user_role on user_id = '{user_id}' and role.id = role_id""")
+    res = cursor.fetchone()
+    if res:
+        return res[0]
+    else:
+        return False
+
+
+def checkSpecialties(specialization):
+    cursor = get_cursor()
+    res = cursor.execute(f"""select * from specialization where specialization = '{specialization}'""")
+    res = cursor.fetchone()
+    print(res)
+    if res:
+        print("Specialization is exist")
+        return True
+    else:
+        print("Specialization not exist")
+        return False
+
+
+def addSpecialization(specialization):
+    if not (checkSpecialties(specialization)):
+        print(specialization)
+        setData(f"""insert into specialization(specialization) values ('{specialization}')""")
+    else:
+        print("Specialization is exist")
+        return False
+
+
+def getAllSpecializations():
+    res = getData(f"""select * from specialization""")
+    listSpecialization = []
+    for elem in res:
+        listSpecialization.append(elem[1])
+        print(elem[1])
+    return listSpecialization

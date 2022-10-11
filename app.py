@@ -18,7 +18,8 @@ login_manager = LoginManager(app)
 @app.route('/')
 def index():
     if current_user.get_id():
-        return "Hello"
+        if database.getRoleUser(current_user.get_id()) == 'admin':
+            return render_template("indexAdmin.html")
     else:
         return redirect("/login")
 
@@ -62,9 +63,9 @@ def logout():
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
-    if request.method == 'GET':
+    if request.method == 'GET' and database.getRoleUser(current_user.get_id()) == 'admin':
         return render_template('registration.html')
-    if request.method == 'POST':
+    if request.method == 'POST' and database.getRoleUser(current_user.get_id()) == 'admin':
         # Проверка пароля на его сложность
         if validate_password(request.form.get("password")) is True:
             # Если поля Имя/Фамилия, опыт и специальность не введены, создаем админа
@@ -82,6 +83,26 @@ def registration():
         else:
             return render_template("registration.html", message="Incorrect password (a-z, A-Z, >8)")
     return redirect("/")
+
+
+@app.route('/specialists')
+def specialists():
+    if database.getRoleUser(current_user.get_id()) == 'admin':
+        return render_template("specialist.html", listSpecialization=database.getAllSpecializations())
+    else:
+        return redirect("/")
+
+
+@app.route('/add_specialties', methods=['POST', 'GET'])
+def addSpecialties():
+    if request.method == 'GET' and database.getRoleUser(current_user.get_id()) == 'admin':
+        return render_template('add_specialties.html')
+    if request.method == 'POST' and database.getRoleUser(current_user.get_id()) == 'admin':
+        if not database.checkSpecialties(request.form.get("specialization")):
+            database.addSpecialization(request.form.get("specialization").title())
+            return redirect("/specialists")
+        else:
+            return render_template("add_specialties.html", error="Specialization is exist")
 
 
 if __name__ == '__main__':

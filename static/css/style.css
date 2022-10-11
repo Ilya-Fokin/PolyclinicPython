@@ -93,3 +93,50 @@ header{
     margin: 45px 0;
     font-family: 'Montserrat', sans-serif;
 }
+
+.menu_zone{
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    padding: 45px;
+    text-align: center;
+    margin: 0 auto;
+    font-size: 24px;
+}
+
+.menu_zone a{
+    border-bottom: 1px solid black;
+    padding: 3px 2px;
+    width: 60%;
+    margin: 5px auto;
+}
+
+#button_a{
+    border-bottom: none;
+    margin-bottom: 15px;
+}
+
+.title_block{
+    margin: 0 auto;
+    width: 30%;
+    text-align: center;
+    font-size: 24px;
+    border-bottom: 1px solid #6fa48e;
+    padding: 4px 10px;
+}
+
+.list_zone{
+    margin: 0 auto;
+    width: 65%;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+}
+
+.preview_string{
+    border: 1px solid black;
+    padding: 8px 35px;
+    width: 75%;
+    margin: 0 auto;
+    font-size: 20px;
+}
