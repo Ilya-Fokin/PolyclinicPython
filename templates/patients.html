@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Patients</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <div class="title_block">PATIENTS</div>
+
+        <div class="list_zone">
+            <a id="button_a" href="http://127.0.0.1:5000/add_patient"><button class="enter_button">Add patient</button></a>
+            {% if list_patients %}
+                <table>
+                    <tr><th>Id</th><th>Full name</th><th>Date of birth</th><th>Address</th></tr>
+                    {% for elem in list_patients %}
+                        <tr> <td>{{ elem['id'] }}.</td> <td><a href="patient_{{ elem }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> <td>{{ elem['address'] }}</td> </tr>
+                {% endfor %}
+                </table>
+            {% else %} <div class="message">Not Found</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
