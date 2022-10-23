@@ -140,3 +140,63 @@ header{
     margin: 0 auto;
     font-size: 20px;
 }
+
+#preview_patient{
+    width: 90%;
+}
+
+table {
+   border-collapse: collapse;
+   /*убираем пустые промежутки между ячейками*/
+   border: 2px solid black;
+    padding: 10px;
+    font-size: 18px;
+   /*устанавливаем для таблицы внешнюю границу серого цвета толщиной 1px*/
+}
+
+th {
+   border: 1px solid black;
+    padding: 5px;
+}
+
+td {
+   border: 1px solid black;
+    padding: 5px;
+}
+
+.about_user_zone{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 10px 25px;
+    border-bottom: 1px solid black;
+    font-size: 18px;
+}
+
+.about_user_zone a{
+    color: #6fa48e;
+    border: 1px solid black;
+    width: 120px;
+    padding: 3px 5px;
+    margin: 15px auto 2px;
+}
+
+#free_reservation{
+    color: #6fa48e;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+
+
+.work_schedules_form input{
+    width: 15%;
+    padding: 0;
+    font-size: 14px;
+    margin: 0 15px;
+}
+
+.title_block{
+    margin: 25px auto 5px;
+}
+

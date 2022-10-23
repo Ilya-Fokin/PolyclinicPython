@@ -22,7 +22,11 @@
             <input class="input_form" type="text" name="experience" placeholder="Experience, years">
             <select class="input_form" name="specialization">
                 <option>Not Selected</option>
-                <option>Specialization</option>
+                {% if list_specialization %}
+                    {% for elem in list_specialization %}
+                        <option>{{ elem }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
             <button class="enter_button">Enter</button>
             {% if message %}

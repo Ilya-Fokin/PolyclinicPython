@@ -17,14 +17,13 @@
         <div class="title_block">SPECIALTIES</div>
 
         <div class="list_zone">
-            <a id="button_a" href="http://127.0.0.1:5000/add_specialties"><button class="enter_button">Add</button></a>
+            <a id="button_a" href="http://127.0.0.1:5000/add_specialties"><button class="enter_button">Add specialties</button></a>
             {% if listSpecialization %}
                 {% for elem in listSpecialization %}
-                    <a href="specialists_{{ elem }}"><div class="preview_string">{{ elem }}</div></a>
+                    <a href="http://127.0.0.1:5000/specialists/{{ elem }}"><div class="preview_string">{{ elem }}</div></a>
                 {% endfor %}
             {% else %} <div class="message">Not Found</div>
             {% endif %}
-
         </div>
     </div>
 </body>
