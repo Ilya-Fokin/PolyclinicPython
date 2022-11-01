@@ -22,7 +22,7 @@
                 <table>
                     <tr><th>Id</th><th>Full name</th><th>Date of birth</th><th>Address</th></tr>
                     {% for elem in list_patients %}
-                        <tr> <td>{{ elem['id'] }}.</td> <td><a href="patient_{{ elem }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> <td>{{ elem['address'] }}</td> </tr>
+                        <tr> <td>{{ elem['id'] }}.</td> <td><a href="http://127.0.0.1:5000/patient/{{ elem['id'] }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> <td>{{ elem['address'] }}</td></tr>
                 {% endfor %}
                 </table>
             {% else %} <div class="message">Not Found</div>

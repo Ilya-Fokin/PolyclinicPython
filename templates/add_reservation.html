@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Registration</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <form class="login_registration_form" method="POST" action="http://127.0.0.1:5000/add_reservation/{{ doctor_id }}/{{ date_id }}">
+            <div class="header_form">Reservation</div>
+            <input class="input_form" type="text" name="full_name" placeholder="Full name">
+            <input class="input_form" type="date" name="date_of_birth" placeholder="Date of birth">
+            <button class="enter_button">Enter</button>
+            {% if message %}
+                <div class="message">{{ message }}</div>
+                <a id="button_a" href="http://127.0.0.1:5000/add_patient">Add patient</a>
+            {% endif %}
+        </form>
+    </div>
+
+</body>
+</html>
