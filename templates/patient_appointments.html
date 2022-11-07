@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Appointments</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <div class="about_user_zone">
+            <p>Full name: {{ patient['full_name'] }}</p>
+            <p>Date of birth: {{ patient['date_of_birth'] }}</p>
+            <p>Address: {{ patient['address'] }}</p>
+        </div>
+
+        <div class="list_zone">
+            {% if list_appointments %}
+                <table>
+                        <tr><th>Doctor name</th><th>Specialization</th><th>Date</th><th>Time</th></tr>
+                        {% for elem in list_appointments %}
+                            <tr> <td><a href="http://127.0.0.1:5000/doctor/{{ elem['full_name'] }}" id="free_reservation"> {{ elem['doctor_name'] }} </a></td> <td> {{ elem['specialization'] }} </td><td> {{ elem['date'] }} </td> <td> {{ elem['time'] }} </td> <td> <a href="http://127.0.0.1:5000/patient/delete_appointments/{{ elem["patient_id"] }}/{{ elem["id"] }}"> Delete </a> </td></tr>
+                        {% endfor %}
+                </table>
+            {% else %}
+                <div class="error">Not found</div>
+            {% endif %}
+        </div>
+    </div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Diagnoses</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <div class="title_block">DIAGNOSES</div>
+
+        <div class="list_zone">
+            <a id="button_a" href="http://127.0.0.1:5000/add_diagnosis"><button class="enter_button">Add diagnosis</button></a>
+            {% if list_diagnosis %}
+                <table>
+                    <tr><th>Id</th><th>Diagnosis</th><th>Description</th></tr>
+                    {% for elem in list_diagnosis %}
+                        <tr> <td>{{ elem['id'] }}</td> <td>{{ elem['diagnosis'] }} </td> <td>{{ elem['description'] }}</td> </tr>
+                {% endfor %}
+                </table>
+            {% else %} <div class="message">Not Found</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

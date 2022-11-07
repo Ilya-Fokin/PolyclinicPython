@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Doctor</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <div class="about_user_zone">
+            <p>Full name: {{ patient['full_name'] }}</p>
+            <p>Date of birth: {{ patient['date_of_birth'] }}</p>
+            <p>Address: {{ patient['address'] }}</p>
+            <a href="http://127.0.0.1:5000/patient/edit/{{ patient['id'] }}">Change info</a>
+        </div>
+        <div class="menu_zone">
+            <a href="http://127.0.0.1:5000/patient_appointments/{{ patient['id'] }}">Appointments</a>
+            <a href="http://127.0.0.1:5000/patient/diagnosis/{{ patient['id'] }}">Diagnosis</a>
+        </div>
+    </div>
+</body>
+</html>

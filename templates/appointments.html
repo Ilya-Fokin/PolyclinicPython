@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Appointments</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <div class="about_user_zone">
+            <p>Full name: {{ doctor['full_name'] }}</p>
+            <p>Specialization: {{ doctor['specialization'] }}</p>
+            <p>Experience: {{ doctor['experience'] }}</p>
+        </div>
+
+        <form class="work_schedules_form" method="post" action="http://127.0.0.1:5000/appointments/{{ doctor['id'] }}/check_date">
+        <div class="title_block">CHECK THE APPOINTMENTS</div>
+            <input class="input_form" type="date" name="check_date" placeholder="Date">
+            <button class="enter_button">Check</button>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+        </form>
+
+        <div class="list_zone">
+            {% if list_appointments_today %}
+                <div class="title_block">TODAY</div><br><br>
+                <table>
+                        <tr><th>Full name</th><th>Date of birth</th><th>Date</th><th>Time</th></tr>
+                        {% for elem in list_appointments_today %}
+                            <tr> <td><a href="http://127.0.0.1:5000/patient/{{ elem['full_name'] }}" id="free_reservation"> {{ elem['full_name'] }} </a></td> <td> {{ elem['date_of_birth'] }} </td><td> {{ elem['date'] }} </td> <td> {{ elem['time'] }} </td></tr>
+                        {% endfor %}
+                </table>
+            {% endif %}
+
+            {% if list_appointments %}
+                <table>
+                        <tr><th>Full name</th><th>Date of birth</th><th>Date</th><th>Time</th></tr>
+                        {% for elem in list_appointments %}
+                            <tr> <td><a href="http://127.0.0.1:5000/patient/{{ elem['full_name'] }}" id="free_reservation"> {{ elem['full_name'] }} </a></td> <td> {{ elem['date_of_birth'] }} </td><td> {{ elem['date'] }} </td> <td> {{ elem['time'] }} </td></tr>
+                        {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+    </div>

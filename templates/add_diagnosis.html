@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gemunu+Libre:wght@300&family=Montserrat:wght@200&display=swap" rel="stylesheet">
+    <title>Add patient</title>
+</head>
+<body>
+    <header>
+        <a href="http://127.0.0.1:5000/" id="logo">POLYCLINIC</a>
+    </header>
+
+    <div class="content_zone">
+        <form class="login_registration_form" method="post" action="http://127.0.0.1:5000/add_diagnosis">
+            <div class="header_form">Add diagnosis</div>
+            <input class="input_form" type="text" name="diagnosis" placeholder="Diagnosis">
+            <input class="input_form" type="text" name="description" placeholder="Description">
+            <button class="enter_button">Enter</button>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
