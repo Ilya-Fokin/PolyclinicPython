@@ -19,17 +19,18 @@
             <p>Specialization: {{ doctor['specialization'] }}</p>
             <p>Experience: {{ doctor['experience'] }}</p>
         </div>
-
-        <form class="work_schedules_form" method="post" action="http://127.0.0.1:5000/work_schedule/{{ doctor['id'] }}">
-        <div class="title_block">ADD</div>
-            <input class="input_form" type="date" name="date" placeholder="Date">
-            <input class="input_form" type="time" name="start_time" placeholder="Start">
-            <input class="input_form" type="time" name="finish_time" placeholder="Finish">
-            <button class="enter_button">Add</button>
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
-        </form>
+        {% if current != doctor["user_id"] %}
+            <form class="work_schedules_form" method="post" action="http://127.0.0.1:5000/work_schedule/{{ doctor['id'] }}">
+            <div class="title_block">ADD</div>
+                <input class="input_form" type="date" name="date" placeholder="Date">
+                <input class="input_form" type="time" name="start_time" placeholder="Start">
+                <input class="input_form" type="time" name="finish_time" placeholder="Finish">
+                <button class="enter_button">Add</button>
+                {% if error %}
+                    <div class="error">{{ error }}</div>
+                {% endif %}
+            </form>
+        {% endif %}
 
         <form class="work_schedules_form" method="post" action="http://127.0.0.1:5000/work_schedule/{{ doctor['id'] }}/check_date">
         <div class="title_block">CHECK THE SCHEDULE</div>

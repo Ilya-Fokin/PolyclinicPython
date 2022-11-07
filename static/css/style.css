@@ -200,3 +200,10 @@ td {
     margin: 25px auto 5px;
 }
 
+#add_diagnosis_from{
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+

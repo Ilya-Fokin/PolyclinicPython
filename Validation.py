@@ -18,3 +18,20 @@ def validate_password(password):
         val = False
 
     return val
+
+
+def validate_full_name(full_name):
+    import re
+
+    regex = "^[a-zA-Zа-яА-ЯёЁ ]+$"
+    pattern = re.compile(regex)
+    count = 0
+    for sym in full_name:
+        if sym == " ":
+            count=count+1
+    if pattern.search(full_name) is not None and count == 2:
+        print(True)
+        return True
+    else:
+
+        return False

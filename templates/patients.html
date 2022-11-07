@@ -17,12 +17,14 @@
         <div class="title_block">PATIENTS</div>
 
         <div class="list_zone">
+        {% if role == "admin" %}
             <a id="button_a" href="http://127.0.0.1:5000/add_patient"><button class="enter_button">Add patient</button></a>
+        {% endif %}
             {% if list_patients %}
                 <table>
                     <tr><th>Id</th><th>Full name</th><th>Date of birth</th><th>Address</th></tr>
                     {% for elem in list_patients %}
-                        <tr> <td>{{ elem['id'] }}.</td> <td><a href="http://127.0.0.1:5000/patient/{{ elem['id'] }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> <td>{{ elem['address'] }}</td></tr>
+                        <tr> <td>{{ elem['id'] }}.</td> <td><a href="http://127.0.0.1:5000/patient/{{ elem['id'] }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> <td>{{ elem['address'] }}</td> <td> <a href="http://127.0.0.1:5000/patient/edit/{{ elem['id'] }}">Edit</a> </td></tr>
                 {% endfor %}
                 </table>
             {% else %} <div class="message">Not Found</div>

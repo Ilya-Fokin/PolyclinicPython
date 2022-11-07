@@ -18,11 +18,12 @@
             <p>Full name: {{ doctor['full_name'] }}</p>
             <p>Specialization: {{ doctor['specialization'] }}</p>
             <p>Experience: {{ doctor['experience'] }}</p>
-            <a href="http://127.0.0.1:5000/change_info_{{ doctor['id'] }}">Change info</a>
+            <a href="http://127.0.0.1:5000/doctor/{{ doctor["id"] }}/change_info">Change info</a>
         </div>
         <div class="menu_zone">
             <a href="http://127.0.0.1:5000/appointments/{{ doctor['id'] }}">Appointments</a>
             <a href="http://127.0.0.1:5000/work_schedule/{{ doctor['id'] }}">Work schedule</a>
+            <a href="http://127.0.0.1:5000/patients">Patients</a>
             {% if current_id == doctor['user_id'] %}
                 <a id="button_a" href="http://127.0.0.1:5000/logout"><button class="enter_button">Logout</button></a>
             {% endif %}

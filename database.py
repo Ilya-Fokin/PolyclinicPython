@@ -146,11 +146,11 @@ def checkSpecialties(specialization):
 
 
 def addSpecialization(specialization):
-    if not (checkSpecialties(specialization)):
+    if not (checkSpecialties(specialization)) and validate_full_name(specialization):
         print(specialization)
         setData(f"""insert into specialization(specialization) values ('{specialization}')""")
     else:
-        print("Specialization is exist")
+        print("Specialization is exist or incorrect word")
         return False
 
 
@@ -174,7 +174,7 @@ def get_specialization_id(specialization):
 
 
 def createDoctor(login, password, full_name, specialization, experience):
-    if createUser(login, password, 'doctor') is True:
+    if createUser(login, password, 'doctor') is True and validate_full_name(full_name):
         if checkSpecialties(specialization) is True:
             setData(f"""insert into doctor(full_name, specialization_id, experience, user_id) value ('{full_name}', 
             {get_specialization_id(specialization)}, '{experience}', {get_user_id(login)})""")
@@ -211,12 +211,23 @@ def get_doctor_by_doctor_id(doctor_id):
         return False
 
 
+def change_doctor_info(doctor_id, full_name, experience, specialization):
+    cursor = get_cursor()
+    cursor.execute(f"""select id from specialization where specialization = '{specialization}'""")
+    spec = cursor.fetchone()
+    doctor = get_doctor_by_doctor_id(doctor_id)
+    if doctor:
+        setData(f"""update doctor set full_name = '{full_name}', experience = {experience}, 
+        specialization_id = {spec[0]} where id = {doctor_id}""")
+
+
 def add_work_schedule(doctor_id, date_work, start_time, finish_time):
+    if check_the_doctor_schedule(doctor_id, date_work):
+        delete_work_schedule(doctor_id, date_work)
+
     period = timedelta(hours=0, minutes=20)
     start_time = datetime.strptime(start_time, '%H:%M')
-    print(start_time)
     finish_time = datetime.strptime(finish_time, '%H:%M')
-    print(finish_time)
     times = []
     while start_time <= finish_time:
         times.append(str(start_time))
@@ -332,8 +343,11 @@ def add_appointment(patient_id, doctor_id, date, time):
 
 
 def create_patient(full_name, date_of_birth, address):
-    setData(f"""insert into patient(full_name, date_of_birth, address) value('{full_name}', 
-    '{date_of_birth}', '{address}')""")
+    if validate_full_name(full_name):
+        setData(f"""insert into patient(full_name, date_of_birth, address) value('{full_name}', 
+        '{date_of_birth}', '{address}')""")
+    else:
+        print("Error validate")
 
 
 def convertDate(request_date):
@@ -398,8 +412,9 @@ def get_all_patient_appointments(patient_id):
     list_appointments = []
     if result:
         for elem in result:
-            list_appointments.append({"id": elem[0], "doctor_name": elem[1], "specialization": elem[2], 'patient_id': elem[3],
-                                      "date": elem[4], "time": elem[5]})
+            list_appointments.append(
+                {"id": elem[0], "doctor_name": elem[1], "specialization": elem[2], 'patient_id': elem[3],
+                 "date": elem[4], "time": elem[5]})
     return list_appointments
 
 
@@ -407,6 +422,33 @@ def delete_patient_appointments(id):
     setData(f"""delete from doc_appointments where id = {id}""")
 
 
-def make_diagnosis(doctor_id, patient_id):
-    pass
+def get_all_diagnoses_patient(patient_id):
+    result = getData(f"""select patient_diagnosis.*, doctor.full_name, diagnosis.diagnosis, diagnosis.description 
+    from patient_diagnosis. join doctor on patient_diagnosis.doctor_id = doctor.id 
+    join patient on patient_diagnosis.patient_id = {patient_id} 
+    join diagnosis on diagnosis.id = patient_diagnosis.diagnosis_id""")
+    list_diagnosis = []
+    if result:
+        for elem in result:
+            list_diagnosis.append({"id": elem[0], "patient_id": elem[1], "diagnosis_id": elem[2], "doctor_id": elem[3],
+                                   "date_time": elem[4], "doctor_name": elem[5], "diagnosis": elem[6]})
+    return list_diagnosis
 
+
+def make_diagnosis(doctor_id, patient_id, *diagnoses):
+    date_time = datetime.now()
+    for elem in diagnoses:
+        print(elem)
+        setData(f"""insert into patient_diagnosis(patient_id, diagnosis_id, doctor_id, date_time) value ({patient_id}, 
+        {elem}, {doctor_id}, '{date_time}')""")
+
+
+def delete_work_schedule(doctor_id, date):
+    setData(f"""delete from work_schedule where doctor_id = {doctor_id} and date = '{date}'""")
+
+
+def patient_edit(id, full_name, date_of_birth, address):
+    patient = get_patient_by_id(id)
+    if patient:
+        setData(f"""update patient set full_name = '{full_name}', date_of_birth = '{date_of_birth}', 
+        address = '{address}' where id = {id}""")
