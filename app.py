@@ -2,7 +2,7 @@ import datetime
 
 import flask_login
 from flask import Flask
-from flask import session, redirect, request, url_for, render_template
+from flask import session, redirect, request, url_for, render_template, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from Validation import *
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -187,7 +187,8 @@ def patients():
     if database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
             current_user.get_id()) == 'doctor':
         list_patients = database.get_all_patients()
-        return render_template("patients.html", list_patients=list_patients, role=database.getRoleUser(current_user.get_id()))
+        return render_template("patients.html", list_patients=list_patients,
+                               role=database.getRoleUser(current_user.get_id()))
     else:
         return redirect("/")
 
@@ -224,6 +225,16 @@ def add_patient():
     else:
         return redirect("/")
 
+
+@app.route("/diagnoses/search", methods=["POST"])
+def find_diagnosis():
+    if database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor':
+        result = database.get_diagnosis_by_title(request.form.get("diagnosis"))
+        if result:
+            return render_template("diagnoses.html", diagnosis=result)
+        else:
+            return render_template("diagnoses.html", message_search="Not found")
 
 @app.route("/doctor/<id>")
 def doctor_page(id):
@@ -279,11 +290,10 @@ def add_reservation_page(doctor_id, date_id):
     if request.method == 'POST' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
             current_user.get_id()) == 'doctor'):
         if request.form.get("full_name") and request.form.get("date_of_birth"):
-            patient = database.get_patient(request.form.get("full_name").title(), request.form.get("date_of_birth"))
-            if patient:
-                schedule = database.get_schedule_by_id(date_id)
-                database.add_appointment(patient['id'], doctor_id, schedule['date'], schedule['time'])
-                return redirect(f"""/work_schedule/{doctor_id}""")
+            patient_find = database.get_all_patient_by_full_name(request.form.get("full_name"))
+            print(patient_find)
+            if patient_find:
+                return render_template("add_reservation.html", patient_find=patient_find)
             else:
                 return render_template("add_reservation.html", doctor_id=doctor_id, date_id=date_id,
                                        message="Patient not found")
@@ -336,7 +346,7 @@ def patient_appointments(patient_id):
 
 @app.route("/patient/delete_appointments/<patient_id>/<id>")
 def delete_patient_appointments(id, patient_id):
-    if request.method == 'GET' and database.getRoleUser(current_user.get_id()) == 'admin':
+    if request.method == 'GET' and database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(current_user.get_id()) == 'doctor':
         database.delete_patient_appointments(id)
         return redirect(f"""/patient_appointments/{patient_id}""")
 
@@ -346,10 +356,37 @@ def patient_diagnoses(patient_id):
     if request.method == 'GET' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
             current_user.get_id()) == 'doctor'):
         list_diagnoses = database.get_all_diagnoses_patient(patient_id)
+        print(list_diagnoses)
         doctor = database.get_doctor_by_id(current_user.get_id())
         patient = database.get_patient_by_id(patient_id)
         return render_template("patient_diagnoses.html", list_diagnoses=list_diagnoses, patient=patient,
                                doctor=doctor)
+
+
+@app.route("/diagnosis/<id>/edit", methods=["POST", "GET"])
+def edit_diagnosis(id):
+    if request.method == 'GET' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor'):
+        diagnosis = database.get_diagnosis_by_id(id)
+        if diagnosis:
+            return render_template("edit_diagnosis.html", diagnosis=diagnosis)
+    if request.method == 'POST' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor'):
+        if request.form.get("diagnosis") and request.form.get("description"):
+            print(request.form.get("diagnosis"))
+            print(request.form.get("description"))
+            database.edit_diagnosis(id, request.form.get("diagnosis"), request.form.get("description"))
+            return redirect("/diagnoses")
+        else:
+            return render_template("edit_diagnosis.html", message="Fill in all the fields")
+
+
+@app.route("/diagnosis/<id>/delete")
+def delete_diagnosis(id):
+    if request.method == 'GET' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor'):
+        database.delete_diagnosis(id)
+        return redirect("/diagnoses")
 
 
 @app.route("/patient/<patient_id>/add_diagnosis", methods=["GET", "POST"])
@@ -363,12 +400,35 @@ def add_patient_diagnosis(patient_id):
         if request.form.get("diagnosis_check"):
             doctor = database.get_doctor_by_id(current_user.get_id())
             list = request.form.getlist("diagnosis_check")
+            print("++")
+            print(list)
             array = []
             for elem in list:
                 array.append(int(elem))
             database.make_diagnosis(doctor["id"], patient_id, array)
+            return redirect(f"""/patient/diagnosis/{patient_id}""")
     else:
         return redirect("/patient/<patient_id>/add_diagnosis")
+
+
+@app.route("/find_patient", methods=["POST"])
+def find_patient():
+    if request.method == 'POST' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor'):
+        if request.get_json(force=True):
+            list_patients = database.find_patient_by_full_name(request.get_json(force=True)['full_name'])
+            print(list_patients)
+            return jsonify(list_patients)
+
+
+@app.route("/add_reservation/<doctor_id>/<date_id>/<patient_id>", methods=['GET'])
+def create_reservation(doctor_id, date_id, patient_id):
+    if request.method == 'GET' and (database.getRoleUser(current_user.get_id()) == 'admin' or database.getRoleUser(
+            current_user.get_id()) == 'doctor'):
+        result = database.get_schedule_by_id(date_id)
+        database.add_appointment(patient_id, doctor_id, result["date"], result["time"])
+        return redirect(f"""/work_schedule/{doctor_id}""")
+
 
 
 if __name__ == '__main__':

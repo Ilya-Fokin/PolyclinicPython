@@ -16,6 +16,10 @@
     <div class="content_zone">
         <div class="title_block">PATIENTS</div>
 
+    <form class = "search" method="POST" action="http://127.0.0.1:5000/patient/search">
+            <input class="input_form" id="find_patient_input" type="text" name="full_name" placeholder="Search">
+    </form>
+
         <div class="list_zone">
         {% if role == "admin" %}
             <a id="button_a" href="http://127.0.0.1:5000/add_patient"><button class="enter_button">Add patient</button></a>
@@ -31,5 +35,7 @@
             {% endif %}
         </div>
     </div>
+    <script src="/static/js/jquery-3.0.0.min.js"></script>
+<script src="/static/js/js.js"></script>
 </body>
 </html>

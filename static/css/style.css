@@ -83,6 +83,7 @@ header{
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+
 }
 
 .enter_button:hover {
@@ -113,7 +114,9 @@ header{
 
 #button_a{
     border-bottom: none;
-    margin-bottom: 15px;
+
+    width: 30%;
+    margin: 0 auto 15px;
 }
 
 .title_block{
@@ -207,3 +210,56 @@ td {
     justify-content: center;
 }
 
+.search{
+    width: 35%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 0 auto;
+
+}
+
+.search input{
+    height: 20px;
+    padding: 5px;
+    margin-right: 5px;
+    font-size: 17px;
+}
+
+.search_button{
+    width: 46px;
+    height: 25px;
+    align-items: center;
+    margin: 0 auto;
+    border: none;
+    transition: .4s;
+    padding: 3px;
+}
+
+.search_button:hover {
+  box-shadow: #6fa48e 0 0 0 3px, transparent 0 0 0 0;
+}
+
+.finder_patient{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.patient_string_find{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    width: 95%;
+    margin: 5px;
+    padding: 3px;
+}
+
+#find_zone{
+    width: 70%;
+}
+
+.search{
+    padding: 15px;
+}

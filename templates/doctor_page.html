@@ -23,6 +23,7 @@
         <div class="menu_zone">
             <a href="http://127.0.0.1:5000/appointments/{{ doctor['id'] }}">Appointments</a>
             <a href="http://127.0.0.1:5000/work_schedule/{{ doctor['id'] }}">Work schedule</a>
+             <a href="http://127.0.0.1:5000/diagnoses">Diagnoses list</a>
             <a href="http://127.0.0.1:5000/patients">Patients</a>
             {% if current_id == doctor['user_id'] %}
                 <a id="button_a" href="http://127.0.0.1:5000/logout"><button class="enter_button">Logout</button></a>

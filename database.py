@@ -26,7 +26,7 @@ def getData(query):
         cursor = connection.cursor()
         cursor.execute(query)
         rows = cursor.fetchall()
-        print(rows)
+
         cursor.close()
         return rows
     except Exception as ex:
@@ -155,7 +155,7 @@ def addSpecialization(specialization):
 
 
 def getAllSpecializations():
-    res = getData(f"""select * from specialization""")
+    res = getData(f"""select * from specialization order by specialization asc""")
     listSpecialization = []
     for elem in res:
         listSpecialization.append(elem[1])
@@ -289,7 +289,7 @@ def get_schedule_by_id(id):
 
 def get_all_specialists(specialization):
     result = getData(f"""select * from doctor join specialization on doctor.specialization_id = specialization.id 
-    and specialization.specialization = '{specialization}'""")
+    and specialization.specialization = '{specialization}' order by doctor.full_name asc""")
     list_doctors = []
     if result:
         for doctor in result:
@@ -316,7 +316,7 @@ def get_all_doctors():
 
 
 def get_all_patients():
-    result = getData("select * from patient")
+    result = getData("select * from patient order by full_name asc")
     list_patients = []
     print(result)
     for patient in result:
@@ -359,10 +359,12 @@ def convertDate(request_date):
 
 
 def get_all_diagnoses():
-    result = getData(f"""select * from diagnoses""")
+    result = getData(f"""select diagnoses.id, diagnoses.diagnosis, diagnoses.description, count(*)
+     from patient_diagnosis join diagnoses on diagnoses.id = patient_diagnosis.diagnosis_id 
+     group by patient_diagnosis.diagnosis_id order by diagnoses.diagnosis asc;""")
     list_diagnoses = []
     for elem in result:
-        list_diagnoses.append({'id': elem[0], 'diagnosis': elem[1], 'description': elem[2]})
+        list_diagnoses.append({'id': elem[0], 'diagnosis': elem[1], 'description': elem[2], 'count': elem[3]})
     return list_diagnoses
 
 
@@ -405,8 +407,17 @@ def get_patient_by_id(patient_id):
     return patient
 
 
+def get_all_patient_by_full_name(full_name):
+    result = getData(f"""select * from patient where full_name = '{full_name}' order by full_name asc""")
+    list = []
+    for elem in result:
+        list.append({"full_name": elem[0], "date_of_birth": elem[1], "address": elem[3]})
+    return list
+
+
 def get_all_patient_appointments(patient_id):
-    result = getData(f"""select doc_appointments.id, doctor.full_name, specialization.specialization, patient_id, date, time 
+    result = getData(f"""select doc_appointments.id, doctor.full_name, specialization.specialization, patient_id, date, time, 
+    doctor.user_id
     from doc_appointments join doctor on doctor.id = doctor_id join specialization 
     on specialization.id = doctor.specialization_id where patient_id = '{patient_id}';""")
     list_appointments = []
@@ -414,7 +425,7 @@ def get_all_patient_appointments(patient_id):
         for elem in result:
             list_appointments.append(
                 {"id": elem[0], "doctor_name": elem[1], "specialization": elem[2], 'patient_id': elem[3],
-                 "date": elem[4], "time": elem[5]})
+                 "date": elem[4], "time": elem[5], "user_id": elem[6]})
     return list_appointments
 
 
@@ -423,24 +434,44 @@ def delete_patient_appointments(id):
 
 
 def get_all_diagnoses_patient(patient_id):
-    result = getData(f"""select patient_diagnosis.*, doctor.full_name, diagnosis.diagnosis, diagnosis.description 
-    from patient_diagnosis. join doctor on patient_diagnosis.doctor_id = doctor.id 
-    join patient on patient_diagnosis.patient_id = {patient_id} 
-    join diagnosis on diagnosis.id = patient_diagnosis.diagnosis_id""")
+    result = getData(f"""select distinct patient_diagnosis.id, patient_diagnosis.patient_id, patient_diagnosis.diagnosis_id, 
+     patient_diagnosis.doctor_id, patient_diagnosis.date_time, doctor.full_name, diagnoses.diagnosis, diagnoses.description 
+    from patient_diagnosis
+    inner join doctor on patient_diagnosis.doctor_id = doctor.id 
+    inner join diagnoses on diagnoses.id = patient_diagnosis.diagnosis_id
+    inner join patient on patient_diagnosis.patient_id = {patient_id} """)
     list_diagnosis = []
     if result:
         for elem in result:
             list_diagnosis.append({"id": elem[0], "patient_id": elem[1], "diagnosis_id": elem[2], "doctor_id": elem[3],
-                                   "date_time": elem[4], "doctor_name": elem[5], "diagnosis": elem[6]})
+                                   "date_time": elem[4], "doctor_name": elem[5], "diagnosis": elem[6],
+                                   "description": elem[7]})
     return list_diagnosis
 
 
-def make_diagnosis(doctor_id, patient_id, *diagnoses):
-    date_time = datetime.now()
+def make_diagnosis(doctor_id, patient_id, diagnoses):
+    date_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     for elem in diagnoses:
         print(elem)
         setData(f"""insert into patient_diagnosis(patient_id, diagnosis_id, doctor_id, date_time) value ({patient_id}, 
         {elem}, {doctor_id}, '{date_time}')""")
+
+
+def get_diagnosis_by_id(id):
+    cursor = get_cursor()
+    cursor.execute(f"""select * from diagnoses where id = {id}""")
+    result = cursor.fetchone()
+    diagnosis = {"id": result[0], "diagnosis": result[1], "description": result[2]}
+    return diagnosis
+
+
+def edit_diagnosis(id, diagnosis, description):
+    if get_diagnosis_by_id(id):
+        setData(f"""update diagnoses set diagnosis = '{diagnosis}', description = '{description}' where id = {id}""")
+
+
+def delete_diagnosis(id):
+    setData(f"""delete from diagnoses where id ={id}""")
 
 
 def delete_work_schedule(doctor_id, date):
@@ -452,3 +483,19 @@ def patient_edit(id, full_name, date_of_birth, address):
     if patient:
         setData(f"""update patient set full_name = '{full_name}', date_of_birth = '{date_of_birth}', 
         address = '{address}' where id = {id}""")
+
+
+def find_patient_by_full_name(full_name):
+    result = getData(f"""select * from patient where full_name like '%{full_name}%'""")
+    list_patient = []
+    for elem in result:
+        list_patient.append({'id': elem[0], 'full_name': elem[1], 'date_of_birth': elem[2], 'address': elem[3]})
+    return list_patient
+
+
+def get_diagnosis_by_title(title):
+    cursor = get_cursor()
+    cursor.execute(f"""select * from diagnoses where diagnosis = '{title}'""")
+    result = cursor.fetchone()
+    diagnosis = {"id": result[0], "diagnosis": result[1], "description": result[2]}
+    return diagnosis

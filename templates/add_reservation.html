@@ -14,17 +14,36 @@
     </header>
 
     <div class="content_zone">
-        <form class="login_registration_form" method="POST" action="http://127.0.0.1:5000/add_reservation/{{ doctor_id }}/{{ date_id }}">
+        <form class="login_registration_form" id="finder_zone" method="POST" action="http://127.0.0.1:5000/add_reservation/{{ doctor_id }}/{{ date_id }}">
             <div class="header_form">Reservation</div>
-            <input class="input_form" type="text" name="full_name" placeholder="Full name">
-            <input class="input_form" type="date" name="date_of_birth" placeholder="Date of birth">
+            <input class="input_form" id="find_patient_input" type="text" name="full_name" placeholder="Full name">
+            <div class="finder_patient">
+
+            </div>
             <button class="enter_button">Enter</button>
             {% if message %}
                 <div class="message">{{ message }}</div>
                 <a id="button_a" href="http://127.0.0.1:5000/add_patient">Add patient</a>
             {% endif %}
         </form>
-    </div>
 
+
+
+        {% if patient_find %}
+            <form>
+                <table>
+                    <tr><th>Id</th><th>Full name</th><th>Date of birth</th><th>Address</th></tr>
+                    {% for elem in patient_find %}
+                        <tr> <td><input type="checkbox" name="diagnosis_check" value="{{ elem['id'] }}"> </td> <td><a href="http://127.0.0.1:5000/patient/{{ elem['id'] }}"> {{ elem['full_name'] }} </a></td> <td>{{ elem['date_of_birth'] }}</td> </tr>
+                {% endfor %}
+                </table>
+                <button class="enter_button">Enter</button>
+            </form>
+        {% endif %}
+
+
+    </div>
+    <script src="/static/js/jquery-3.0.0.min.js"></script>
+<script src="/static/js/js.js"></script>
 </body>
 </html>

@@ -17,9 +17,9 @@
         <div class="title_block">DIAGNOSES</div>
 
         <div class="list_zone">
-            {% if current_id == doctor['user_id'] %}
+
                 <a id="button_a" href="http://127.0.0.1:5000/add_diagnosis"><button class="enter_button">Add diagnosis</button></a>
-            {% endif %}
+
 
             {% if list_diagnosis %}
                 <form class="login_registration_form" id="add_diagnosis_from" method="post" action="http://127.0.0.1:5000/patient/{{ patient["id"] }}/add_diagnosis">

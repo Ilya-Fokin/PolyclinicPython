@@ -24,7 +24,13 @@
                 <table>
                     <tr><th>Id</th><th>Doctor</th><th>Diagnosis</th><th>Description</th><th>Date</th></tr>
                     {% for elem in list_diagnoses %}
-                        <tr> <td>{{ elem['id'] }}</td> <td><a href="http://127.0.0.1:5000/diagnosis/{{ elem["diagnosis_id"] }}"> {{ elem['diagnosis'] }} </a></td> <td>{{ elem['description'] }}</td> </tr>
+                        <tr>
+                            <td>{{ elem['id'] }}</td>
+                            <td>{{ elem['doctor_name'] }}</td>
+                            <td>{{ elem['diagnosis'] }}</td>
+                            <td>{{ elem['description'] }}</td>
+                            <td>{{ elem['date_time'] }}</td>
+                        </tr>
                 {% endfor %}
                 </table>
             {% else %} <div class="message">Not Found</div>

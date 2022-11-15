@@ -17,15 +17,28 @@
         <div class="title_block">DIAGNOSES</div>
 
         <div class="list_zone">
+        <form class="search" method="POST" action="http://127.0.0.1:5000/diagnoses/search">
+            <input class="input_form" type="text" name="diagnosis" placeholder="Search...">
+            <button class="search_button">Enter</button>
+        </form>
             <a id="button_a" href="http://127.0.0.1:5000/add_diagnosis"><button class="enter_button">Add diagnosis</button></a>
-            {% if list_diagnosis %}
+             {% if diagnosis %}
                 <table>
                     <tr><th>Id</th><th>Diagnosis</th><th>Description</th></tr>
+                        <tr> <td>{{ diagnosis['id'] }}</td> <td>{{ diagnosis['diagnosis'] }} </td> <td>{{ diagnosis['description'] }}</td> <td><a href="http://127.0.0.1:5000/diagnosis/{{ diagnosis['id'] }}/edit">Edit</a></td> <td><a href="http://127.0.0.1:5000/diagnosis/{{ diagnosis['id'] }}/delete">Delete</a></td> </tr>
+                </table>
+            {% elif message_search %} <div class="message_search">Not Found</div>
+
+            {% endif %}
+            {% if list_diagnosis %}
+                <table>
+                    <tr><th>Id</th><th>Diagnosis</th><th>Description</th><th>Number of cases</th></tr>
                     {% for elem in list_diagnosis %}
-                        <tr> <td>{{ elem['id'] }}</td> <td>{{ elem['diagnosis'] }} </td> <td>{{ elem['description'] }}</td> </tr>
+                        <tr> <td>{{ elem['id'] }}</td> <td>{{ elem['diagnosis'] }} </td> <td>{{ elem['description'] }}</td> <td>{{ elem['count'] }}</td> <td><a href="http://127.0.0.1:5000/diagnosis/{{ elem['id'] }}/edit">Edit</a></td> <td><a href="http://127.0.0.1:5000/diagnosis/{{ elem['id'] }}/delete">Delete</a></td> </tr>
                 {% endfor %}
                 </table>
-            {% else %} <div class="message">Not Found</div>
+            {% elif message %} <div class="message">Not Found</div>
+
             {% endif %}
         </div>
     </div>
